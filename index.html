@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>📚 StudyMaster Pro - Complete Exam Preparation System</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <div class="logo-area">
+                <i class="fas fa-graduation-cap logo-icon"></i>
+                <div class="logo-text">Study<span>Master</span> Pro</div>
+            </div>
+            
+            <div class="nav-links">
+                <div class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-home"></i><span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-section="dailyplan">
+                    <i class="fas fa-calendar-day"></i><span>Daily Plan</span>
+                </div>
+                <div class="nav-item" data-section="progress">
+                    <i class="fas fa-chart-line"></i><span>Progress</span>
+                </div>
+                <div class="nav-item" data-section="resources">
+                    <i class="fas fa-book-open"></i><span>Resources</span>
+                </div>
+                <div class="nav-item" data-section="ai-assistant">
+                    <i class="fas fa-robot"></i><span>AI Assistant</span>
+                </div>
+                <div class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i><span>Settings</span>
+                </div>
+            </div>
+            
+            <div class="nav-right">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationBadge">3</span>
+                </div>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name=Student&background=3b82f6&color=fff" alt="Profile">
+                </div>
+            </div>
+        </nav>
+
+        <div class="main-container">
+            <!-- Course Sidebar -->
+            <aside class="course-sidebar">
+                <div class="sidebar-header">
+                    <i class="fas fa-bookmark"></i>
+                    <span>MY COURSES</span>
+                </div>
+                
+                <div class="course-tab active" data-course="all">
+                    <i class="fas fa-layer-group"></i>
+                    <span>All Courses</span>
+                    <span class="course-progress-badge" id="allProgress">0%</span>
+                </div>
+                
+                <div class="course-tab" data-course="cpe203">
+                    <i class="fas fa-microchip"></i>
+                    <span>CPE203 - Digital Logic</span>
+                    <span class="course-progress-badge" id="cpe203Progress">0%</span>
+                </div>
+                
+                <div class="course-tab" data-course="stt201">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>STT201 - Statistics</span>
+                    <span class="course-progress-badge" id="stt201Progress">0%</span>
+                </div>
+                
+                <div class="course-tab" data-course="sen205">
+                    <i class="fas fa-code-branch"></i>
+                    <span>SEN205 - Requirements</span>
+                    <span class="course-progress-badge" id="sen205Progress">0%</span>
+                </div>
+                
+                <div class="course-tab" data-course="sen203">
+                    <i class="fas fa-infinity"></i>
+                    <span>SEN203 - Discrete Structures</span>
+                    <span class="course-progress-badge" id="sen203Progress">0%</span>
+                </div>
+                
+                <div class="course-tab" data-course="cse201">
+                    <i class="fas fa-laptop-code"></i>
+                    <span>CSE201 - Software Construction</span>
+                    <span class="course-progress-badge" id="cse201Progress">0%</span>
+                </div>
+
+                <div class="sidebar-footer">
+                    <div class="study-tip">
+                        <i class="fas fa-lightbulb"></i>
+                        <span id="studyTip">Take breaks every 50 minutes</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="content-area">
+                <!-- DASHBOARD SECTION -->
+                <section id="dashboard" class="section active-section">
+                    <div class="welcome-section">
+                        <h1><i class="fas fa-smile"></i> <span id="greeting">Good evening</span>, Scholar!</h1>
+                        <div class="date-badge" id="currentDate"></div>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Today's Progress</span>
+                                <span class="stat-value" id="todayHours">0/8 hrs</span>
+                                <div class="mini-progress">
+                                    <div class="mini-progress-fill" id="todayProgressFill" style="width:0%"></div>
+                                </div>
+                                <span class="stat-sub" id="todayTasks">0/12 tasks</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Study Streak</span>
+                                <span class="stat-value" id="streakCount">0</span>
+                                <span class="stat-sub">days in a row</span>
+                                <div class="streak-badges" id="streakBadges"></div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-icon purple">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Overall Progress</span>
+                                <span class="stat-value" id="overallProgress">0%</span>
+                                <span class="stat-sub"><span id="completedTopics">0</span>/<span id="totalTopics">0</span> topics</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exam Countdowns -->
+                    <div class="section-header">
+                        <h2><i class="fas fa-hourglass-half"></i> Exam Countdown</h2>
+                        <button class="btn btn-sm" id="refreshCountdowns"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                    
+                    <div class="countdown-grid" id="countdownGrid">
+                        <!-- Dynamic from JS -->
+                    </div>
+
+                    <!-- Today's Schedule -->
+                    <div class="section-header">
+                        <h2><i class="fas fa-calendar-check"></i> Today's Schedule</h2>
+                        <button class="btn btn-sm" id="startStudySession"><i class="fas fa-play"></i> Start Session</button>
+                    </div>
+                    
+                    <div class="today-schedule" id="todaySchedule">
+                        <!-- Dynamic from JS -->
+                    </div>
+
+                    <!-- Motivational Quote -->
+                    <div class="quote-card" id="quoteCard">
+                        <i class="fas fa-quote-left"></i>
+                        <span id="motivationalQuote">Loading...</span>
+                    </div>
+                </section>
+
+                <!-- DAILY PLAN SECTION -->
+                <section id="dailyplan" class="section">
+                    <div class="section-header">
+                        <h1><i class="fas fa-calendar-alt"></i> 19-Day Exam Preparation Plan</h1>
+                        <div class="plan-controls">
+                            <button class="btn btn-sm" id="expandAllDays"><i class="fas fa-expand-alt"></i> Expand All</button>
+                            <button class="btn btn-sm" id="collapseAllDays"><i class="fas fa-compress-alt"></i> Collapse All</button>
+                        </div>
+                    </div>
+
+                    <!-- Pomodoro Timer -->
+                    <div class="timer-card">
+                        <div class="timer-header">
+                            <h3><i class="fas fa-clock"></i> Pomodoro Timer</h3>
+                            <div class="timer-presets">
+                                <button class="timer-preset active" data-minutes="25">25</button>
+                                <button class="timer-preset" data-minutes="15">15</button>
+                                <button class="timer-preset" data-minutes="45">45</button>
+                            </div>
+                        </div>
+                        <div class="timer-display" id="pomodoroDisplay">25:00</div>
+                        <div class="timer-controls">
+                            <button class="btn btn-primary" id="startPomodoro"><i class="fas fa-play"></i> Start</button>
+                            <button class="btn" id="pausePomodoro"><i class="fas fa-pause"></i> Pause</button>
+                            <button class="btn" id="resetPomodoro"><i class="fas fa-redo-alt"></i> Reset</button>
+                        </div>
+                        <div class="timer-stats">
+                            <span>Today's focus: <strong id="todayFocusTime">0 min</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Daily Plan Container -->
+                    <div id="dailyPlanContainer" class="daily-plan-container">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- PROGRESS SECTION -->
+                <section id="progress" class="section">
+                    <h1><i class="fas fa-chart-pie"></i> Detailed Progress Analytics</h1>
+                    
+                    <div class="progress-filters">
+                        <button class="filter-btn active" data-period="daily">Daily</button>
+                        <button class="filter-btn" data-period="weekly">Weekly</button>
+                        <button class="filter-btn" data-period="monthly">Monthly</button>
+                    </div>
+
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <h3>Hours Studied per Course</h3>
+                            <canvas id="hoursChart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Topics Completed</h3>
+                            <canvas id="topicsPieChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <h3>Daily Progress Trend</h3>
+                            <canvas id="progressTrendChart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Course Completion Status</h3>
+                            <div id="courseCompletionList" class="completion-list"></div>
+                        </div>
+                    </div>
+
+                    <div class="streak-achievements">
+                        <h3><i class="fas fa-trophy"></i> Achievements</h3>
+                        <div class="achievements-grid" id="achievementsGrid">
+                            <!-- Dynamic badges -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- RESOURCES SECTION -->
+                <section id="resources" class="section">
+                    <h1><i class="fas fa-folder-open"></i> Study Resources</h1>
+                    
+                    <div class="resources-tabs">
+                        <button class="resource-tab active" data-resource-type="notes">Notes</button>
+                        <button class="resource-tab" data-resource-type="documents">Documents</button>
+                        <button class="resource-tab" data-resource-type="videos">Videos</button>
+                        <button class="resource-tab" data-resource-type="links">Links</button>
+                    </div>
+
+                    <!-- Document Upload Section -->
+                    <div class="upload-section">
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <h3>Upload Course Materials</h3>
+                            <p>Drag & drop or click to upload PDFs, slides, or notes</p>
+                            <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.txt,.ppt,.pptx" hidden>
+                            <button class="btn btn-primary" id="uploadBtn">Select Files</button>
+                        </div>
+                        <div id="uploadedFiles" class="uploaded-files"></div>
+                    </div>
+
+                    <!-- Notes Section -->
+                    <div class="notes-section">
+                        <div class="note-editor">
+                            <h3>Quick Notes</h3>
+                            <select id="noteCourse" class="note-select">
+                                <option value="CPE203">CPE203 - Digital Logic</option>
+                                <option value="STT201">STT201 - Statistics</option>
+                                <option value="SEN205">SEN205 - Requirements</option>
+                                <option value="SEN203">SEN203 - Discrete Structures</option>
+                                <option value="CSE201">CSE201 - Software Construction</option>
+                            </select>
+                            <input type="text" id="noteTopic" placeholder="Topic name" class="note-input">
+                            <textarea id="noteContent" placeholder="Write your notes here..." rows="6"></textarea>
+                            <div class="note-actions">
+                                <button class="btn btn-primary" id="saveNoteBtn"><i class="fas fa-save"></i> Save Note</button>
+                            </div>
+                        </div>
+                        
+                        <div class="notes-list-section">
+                            <h3>Saved Notes</h3>
+                            <input type="text" id="searchNotes" placeholder="🔍 Search notes..." class="search-input">
+                            <div class="filter-chips">
+                                <span class="chip active" data-filter="all">All</span>
+                                <span class="chip" data-filter="CPE203">CPE203</span>
+                                <span class="chip" data-filter="STT201">STT201</span>
+                                <span class="chip" data-filter="SEN205">SEN205</span>
+                                <span class="chip" data-filter="SEN203">SEN203</span>
+                                <span class="chip" data-filter="CSE201">CSE201</span>
+                            </div>
+                            <div id="notesList" class="notes-grid"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- AI ASSISTANT SECTION -->
+                <section id="ai-assistant" class="section">
+                    <h1><i class="fas fa-robot"></i> AI Study Assistant</h1>
+                    
+                    <div class="ai-container">
+                        <div class="ai-sidebar">
+                            <div class="ai-context">
+                                <h3>Course Context</h3>
+                                <div class="context-toggles">
+                                    <label class="context-toggle">
+                                        <input type="checkbox" value="CPE203" checked> CPE203
+                                    </label>
+                                    <label class="context-toggle">
+                                        <input type="checkbox" value="STT201" checked> STT201
+                                    </label>
+                                    <label class="context-toggle">
+                                        <input type="checkbox" value="SEN205" checked> SEN205
+                                    </label>
+                                    <label class="context-toggle">
+                                        <input type="checkbox" value="SEN203" checked> SEN203
+                                    </label>
+                                    <label class="context-toggle">
+                                        <input type="checkbox" value="CSE201" checked> CSE201
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="uploaded-docs-context">
+                                <h3>Uploaded Documents</h3>
+                                <div id="aiDocumentList"></div>
+                            </div>
+                            
+                            <div class="suggested-questions">
+                                <h3>Suggested Questions</h3>
+                                <ul id="suggestedQuestions">
+                                    <li>Explain 2's complement with example</li>
+                                    <li>What are the 7 types of cohesion?</li>
+                                    <li>How to calculate standard deviation?</li>
+                                    <li>Difference between functional and non-functional requirements</li>
+                                    <li>Explain DeMorgan's theorems</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="ai-chat-area">
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="message ai-message">
+                                    <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                                    <div class="message-content">
+                                        <p>Hello! I'm your AI study assistant. I have access to all your course materials and study plan. Ask me anything about your courses, and I'll help you understand concepts better!</p>
+                                        <span class="message-time">Just now</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="chat-input-area">
+                                <textarea id="chatInput" placeholder="Ask a question about your courses..." rows="2"></textarea>
+                                <div class="chat-actions">
+                                    <button class="btn btn-primary" id="sendMessageBtn"><i class="fas fa-paper-plane"></i> Send</button>
+                                    <button class="btn" id="clearChatBtn"><i class="fas fa-trash"></i> Clear</button>
+                                </div>
+                            </div>
+                            
+                            <div class="chat-note">
+                                <i class="fas fa-info-circle"></i> AI responses are based on your uploaded documents and course materials.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SETTINGS SECTION -->
+                <section id="settings" class="section">
+                    <h1><i class="fas fa-cog"></i> Settings</h1>
+                    
+                    <div class="settings-grid">
+                        <div class="settings-card">
+                            <h3><i class="fas fa-palette"></i> Appearance</h3>
+                            <div class="setting-item">
+                                <span>Dark Mode</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="darkModeToggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <span>Compact View</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="compactViewToggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-card">
+                            <h3><i class="fas fa-clock"></i> Study Goals</h3>
+                            <div class="setting-item">
+                                <span>Daily Study Goal (hours)</span>
+                                <input type="number" id="dailyGoal" min="1" max="16" value="8">
+                            </div>
+                            <div class="setting-item">
+                                <span>Weekly Study Goal (hours)</span>
+                                <input type="number" id="weeklyGoal" min="5" max="80" value="40">
+                            </div>
+                        </div>
+                        
+                        <div class="settings-card">
+                            <h3><i class="fas fa-tomato"></i> Pomodoro Settings</h3>
+                            <div class="setting-item">
+                                <span>Work Duration (minutes)</span>
+                                <input type="number" id="pomodoroWork" min="5" max="60" value="25">
+                            </div>
+                            <div class="setting-item">
+                                <span>Break Duration (minutes)</span>
+                                <input type="number" id="pomodoroBreak" min="1" max="30" value="5">
+                            </div>
+                        </div>
+                        
+                        <div class="settings-card">
+                            <h3><i class="fas fa-bell"></i> Notifications</h3>
+                            <div class="setting-item">
+                                <span>Study Reminders</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="remindersEnabled" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <span>Break Reminders</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="breakRemindersEnabled" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-card">
+                            <h3><i class="fas fa-database"></i> Data Management</h3>
+                            <button class="btn btn-danger" id="exportDataBtn"><i class="fas fa-download"></i> Export Data</button>
+                            <button class="btn btn-danger" id="importDataBtn"><i class="fas fa-upload"></i> Import Data</button>
+                            <button class="btn btn-danger" id="resetDataBtn"><i class="fas fa-exclamation-triangle"></i> Reset All Data</button>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="js/data.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/ai-assistant.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
